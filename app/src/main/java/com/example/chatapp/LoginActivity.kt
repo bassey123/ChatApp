@@ -7,9 +7,13 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.Window
+import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
+
+    lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,15 +21,36 @@ class LoginActivity : AppCompatActivity() {
         supportActionBar!!.hide()
         setContentView(R.layout.activity_login)
 
+        auth = FirebaseAuth.getInstance()
+
         login_btn.setOnClickListener {
-            startActivity(Intent(this, HomeActivity::class.java))
+
+            val email = login_email.text.toString()
+            val pwd = login_pwd.text.toString()
+
+            if(TextUtils.isEmpty(email) || TextUtils.isEmpty(pwd)) {
+                Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show()
+            } else {
+                auth.signInWithEmailAndPassword(email, pwd)
+                    .addOnCompleteListener {
+                        if(it.isSuccessful) {
+                            val intent = Intent(this, HomeActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            Toast.makeText(this, "Authentication failed!", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+            }
         }
 
         signup_link.setOnClickListener {
             startActivity(Intent(this, SignupActivity::class.java))
         }
 
-        login_reg.addTextChangedListener(object : TextWatcher {
+        login_email.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 btnColor()
             }
@@ -55,10 +80,10 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private  fun btnColor() {
-        val regNo = login_reg.text.toString()
+        val email = login_email.text.toString()
         val pwd = login_pwd.text.toString()
 
-        if (TextUtils.isEmpty(regNo) || TextUtils.isEmpty(pwd)) {
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(pwd)) {
             login_btn.setBackgroundResource(R.drawable.btn_disabled)
         } else {
             login_btn.setBackgroundResource(R.drawable.btn_enabled)

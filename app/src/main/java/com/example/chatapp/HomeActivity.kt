@@ -5,24 +5,31 @@ import android.view.Window
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 
 class HomeActivity : AppCompatActivity() {
+
+    private val fragment1: Fragment = MessagesFragment.newInstance()
+    private val fragment2: Fragment = FriendsFragment.newInstance()
+    private val fragment3: Fragment = ProfileFragment.newInstance()
+    private val fm: FragmentManager = supportFragmentManager
+    private var active: Fragment = fragment1
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_messages -> {
-                val messagesFragment = MessagesFragment.newInstance()
-                loadFragment(messagesFragment)
+                fm.beginTransaction().hide(active).show(fragment1).commit()
+                active = fragment1
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_friends -> {
-                val friendsFragment = FriendsFragment.newInstance()
-                loadFragment(friendsFragment)
+                fm.beginTransaction().hide(active).show(fragment2).commit()
+                active = fragment2
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_profile -> {
-                val profileFragment = ProfileFragment.newInstance()
-                loadFragment(profileFragment)
+                fm.beginTransaction().hide(active).show(fragment3).commit()
+                active = fragment3
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -37,36 +44,9 @@ class HomeActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
-    }
 
-    private  fun loadFragment(fragment: Fragment) {
-
-        //replacing fragments
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragmentContainer, fragment)
-            .addToBackStack(null)
-            .commit()
-
-        /*// show/hide fragment
-        if (fragment != null) {
-            val transaction = supportFragmentManager.beginTransaction()
-
-            if (viewModel.lastActiveFragmentTag != null) {
-                val lastFragment = supportFragmentManager.findFragmentByTag(viewModel.lastActiveFragmentTag)
-                if (lastFragment != null)
-                    transaction.hide(lastFragment)
-            }
-
-            if (!fragment.isAdded) {
-                transaction.add(R.id.fragmentContainer, fragment, tag)
-            }
-            else {
-                transaction.show(fragment)
-            }
-
-            transaction.commit()
-            viewModel.lastActiveFragmentTag = tag
-        }*/
+        fm.beginTransaction().add(R.id.fragmentContainer, fragment3, "3").hide(fragment3).commit()
+        fm.beginTransaction().add(R.id.fragmentContainer, fragment2, "2").hide(fragment2).commit()
+        fm.beginTransaction().add(R.id.fragmentContainer, fragment1, "1").commit()
     }
 }

@@ -16,8 +16,8 @@ import kotlinx.android.synthetic.main.activity_signup.*
 
 class SignupActivity : AppCompatActivity() {
 
-    lateinit var auth: FirebaseAuth
-    lateinit var reference: DatabaseReference
+    private lateinit var auth: FirebaseAuth
+    private lateinit var reference: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,15 +77,6 @@ class SignupActivity : AppCompatActivity() {
 
     }
 
-    //This will be implemented in the splash activity
-    /*override fun onStart() {
-        super.onStart()
-
-        if(auth.currentUser != null) {
-            //handle the already login user
-        }
-    }*/
-
     private  fun btnColor() {
         val userName = signup_user.text.toString()
         val regNo = signup_reg.text.toString()
@@ -100,7 +91,7 @@ class SignupActivity : AppCompatActivity() {
     }
 
 
-    fun registerUser(username: String, reg_no: String, email: String, password: String) {
+    private fun registerUser(username: String, reg_no: String, email: String, password: String) {
 
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this, OnCompleteListener {
@@ -114,6 +105,7 @@ class SignupActivity : AppCompatActivity() {
                     hashMap["id"] = userId
                     hashMap["userName"] = username
                     hashMap["regNo"] = reg_no
+                    hashMap["email"] = email
                     hashMap["imageURL"] = "default"
 
                     reference.setValue(hashMap).addOnCompleteListener {

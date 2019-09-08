@@ -23,4 +23,10 @@
     <string name="title_notifications">Notifications</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="name">Name</string>
+    <string name="save_profile">Save Profile</string>
+    <string name="change_password">Change Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
+    <string name="new_password">New Password</string>
+    <string name="old_password">Old Password</string>
+    <string name="logout">Logout</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.chatapp
+package com.example.chatapp.fragments
 
 
 import android.os.Bundle
@@ -6,11 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.chatapp.R
 
-class FriendsFragment : Fragment() {
+class MessagesFragment : Fragment() {
 
     companion object {
-        fun newInstance() : FriendsFragment = FriendsFragment()
+        fun newInstance() : MessagesFragment =
+            MessagesFragment()
     }
 
     override fun onCreateView(
@@ -18,7 +20,7 @@ class FriendsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_friends, container, false)
+        return inflater.inflate(R.layout.fragment_messages, container, false)
     }
 
 

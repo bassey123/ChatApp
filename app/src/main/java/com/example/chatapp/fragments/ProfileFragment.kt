@@ -1,4 +1,4 @@
-package com.example.chatapp
+package com.example.chatapp.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import com.example.chatapp.EditProfileActivity
+import com.example.chatapp.MainActivity
+import com.example.chatapp.R
 import com.example.chatapp.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -19,7 +22,8 @@ class ProfileFragment : Fragment() {
     private lateinit var firebaseUser: FirebaseUser
 
     companion object {
-        fun newInstance() : ProfileFragment = ProfileFragment()
+        fun newInstance() : ProfileFragment =
+            ProfileFragment()
     }
 
     override fun onCreateView(
@@ -64,8 +68,7 @@ class ProfileFragment : Fragment() {
         logout_btn.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             val intent = Intent(context, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
     }

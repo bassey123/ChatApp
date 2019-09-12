@@ -4,7 +4,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.chatapp.adapter.ChatAdapter
+import com.example.chatapp.model.Chat
 import com.example.chatapp.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -17,6 +21,11 @@ class ChatsActivity : AppCompatActivity() {
     private lateinit var fuser: FirebaseUser
     private lateinit var reference: DatabaseReference
 
+    lateinit var chatAdapter: ChatAdapter
+    val mChat = ArrayList<Chat>()
+
+    lateinit var recyclerView: RecyclerView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chats)
@@ -28,6 +37,12 @@ class ChatsActivity : AppCompatActivity() {
         toolbar.setNavigationOnClickListener {
             finish()
         }
+
+        recyclerView = findViewById(R.id.chats_recyclerView)
+        recyclerView.setHasFixedSize(true)
+        val linearLayoutManager = LinearLayoutManager(applicationContext)
+        linearLayoutManager.stackFromEnd = true
+        recyclerView.layoutManager = linearLayoutManager
 
         val intent = intent
         val userid = intent.getStringExtra("userid")
@@ -59,6 +74,8 @@ class ChatsActivity : AppCompatActivity() {
                         .load(user.imageURL)
                         .into(chat_profile_image)
                 }
+
+                readMessages(fuser.uid, userid, user.imageURL)
             }
         })
     }
@@ -72,5 +89,27 @@ class ChatsActivity : AppCompatActivity() {
         hashMap["message"] = message
 
         reference.child("Chats").push().setValue(hashMap)
+    }
+
+    private fun readMessages(myid: String, userid: String, imageurl: String) {
+
+        reference = FirebaseDatabase.getInstance().getReference("Chats")
+        reference.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                mChat.clear()
+                for (snapshot: DataSnapshot in p0.children) {
+                    val chat = snapshot.getValue(Chat::class.java)
+                    if (chat!!.receiver == myid && chat.sender == userid ||
+                        chat.receiver == userid && chat.sender == myid) {
+                        mChat.add(chat)
+                    }
+                    chatAdapter = ChatAdapter(this@ChatsActivity, mChat, imageurl)
+                    recyclerView.adapter = chatAdapter
+                }
+            }
+        })
     }
 }

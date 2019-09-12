@@ -30,4 +30,5 @@
     <string name="old_password">Old Password</string>
     <string name="logout">Logout</string>
     <string name="type_a_message">Type a message…</string>
+    <string name="hello">hello</string>
 </resources>

@@ -53,7 +53,7 @@ class ProfileFragment : Fragment() {
                 if (user.imageURL == "default") {
                     profile_image.setImageResource(R.mipmap.ic_launcher)
                 } else {
-                    Glide.with(newInstance())
+                    Glide.with(activity!!)
                         .load(user.imageURL)
                         .into(profile_image)
                 }

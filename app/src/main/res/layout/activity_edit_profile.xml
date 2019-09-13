@@ -7,12 +7,22 @@
         android:layout_height="match_parent"
         tools:context=".EditProfileActivity">
 
+    <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/edit_profileImage"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/ic_person"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/edit_user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="30dp"
             android:layout_marginEnd="8dp"
             android:drawableLeft="@drawable/ic_person"
             android:drawablePadding="4dp"
@@ -20,7 +30,7 @@
             android:inputType="text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_profileImage"
             app:met_floatingLabel="normal" />
 
     <com.rengwuxian.materialedittext.MaterialEditText

@@ -83,7 +83,7 @@ class ChatsActivity : AppCompatActivity() {
     private fun sendMessage(sender: String, receiver: String, message: String) {
 
         val reference = FirebaseDatabase.getInstance().reference
-        val hashMap: HashMap<String, String> = HashMap()
+        val hashMap: HashMap<String, Any> = HashMap()
         hashMap["sender"] = sender
         hashMap["receiver"] = receiver
         hashMap["message"] = message

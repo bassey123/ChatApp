@@ -62,7 +62,7 @@ class FriendsFragment : Fragment() {
                     }
                 }
 
-                friendsAdapter = FriendsAdapter(context!!, mUsers)
+                friendsAdapter = FriendsAdapter(requireContext(), mUsers)
                 recyclerView.adapter = friendsAdapter
             }
         })

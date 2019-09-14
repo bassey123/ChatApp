@@ -107,6 +107,8 @@ class SignupActivity : AppCompatActivity() {
                     hashMap["regNo"] = reg_no
                     hashMap["email"] = email
                     hashMap["imageURL"] = "default"
+                    hashMap["status"] = "offline"
+                    hashMap["search"] = username.toLowerCase()
 
                     reference.setValue(hashMap).addOnCompleteListener {
                         if (it.isSuccessful) {

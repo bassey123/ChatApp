@@ -14,7 +14,7 @@ import com.example.chatapp.model.User
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.friends_list_item.view.*
 
-class FriendsAdapter(private val mContext: Context, private val mUsers: List<User>) :
+class FriendsAdapter(private val mContext: Context, private val mUsers: List<User>, private val isChat: Boolean) :
     RecyclerView.Adapter<FriendsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -38,6 +38,19 @@ class FriendsAdapter(private val mContext: Context, private val mUsers: List<Use
                 .into(holder.image)
         }
 
+        if (isChat) {
+            if (user.status == "online") {
+                holder.imgOn.visibility = View.VISIBLE
+                holder.imgOff.visibility = View.GONE
+            } else {
+                holder.imgOn.visibility = View.GONE
+                holder.imgOff.visibility = View.VISIBLE
+            }
+        } else {
+            holder.imgOn.visibility = View.GONE
+            holder.imgOff.visibility = View.GONE
+        }
+
         holder.itemView.setOnClickListener {
             val intent = Intent(mContext, ChatsActivity::class.java)
             intent.putExtra("userid", user.id)
@@ -48,6 +61,8 @@ class FriendsAdapter(private val mContext: Context, private val mUsers: List<Use
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val username: TextView = itemView.username
         val image: CircleImageView = itemView.profile_image
+        val imgOn: CircleImageView = itemView.img_on
+        val imgOff: CircleImageView = itemView.img_off
     }
 
 }

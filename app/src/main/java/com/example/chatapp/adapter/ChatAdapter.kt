@@ -51,11 +51,22 @@ class ChatAdapter(private val mContext: Context, private val mChat: List<Chat>, 
                 .load(imageurl)
                 .into(holder.image)
         }
+
+        if (position == mChat.size - 1) {
+            if (chat.isseen) {
+                holder.txtSeen.text = "Seen"
+            } else {
+                holder.txtSeen.text = "Delivered"
+            }
+        } else {
+            holder.txtSeen.visibility = View.GONE
+        }
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val showMessage: TextView = itemView.show_message
         val image: CircleImageView = itemView.profile_image
+        val txtSeen: TextView = itemView.txt_seen
     }
 
     override fun getItemViewType(position: Int): Int {

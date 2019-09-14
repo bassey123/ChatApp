@@ -1,5 +1,6 @@
 package com.example.chatapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -26,6 +27,8 @@ class ChatsActivity : AppCompatActivity() {
 
     lateinit var recyclerView: RecyclerView
 
+    private lateinit var seenListener: ValueEventListener
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chats)
@@ -35,7 +38,7 @@ class ChatsActivity : AppCompatActivity() {
         supportActionBar!!.title = ""
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationOnClickListener {
-            finish()
+            startActivity(Intent(this@ChatsActivity, HomeActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
         }
 
         recyclerView = findViewById(R.id.chats_recyclerView)
@@ -70,12 +73,33 @@ class ChatsActivity : AppCompatActivity() {
                 if (user.imageURL == "default") {
                     chat_profile_image.setImageResource(R.mipmap.ic_launcher)
                 } else {
-                    Glide.with(this@ChatsActivity)
+                    Glide.with(applicationContext)
                         .load(user.imageURL)
                         .into(chat_profile_image)
                 }
 
                 readMessages(fuser.uid, userid, user.imageURL)
+            }
+        })
+
+        seenMessage(userid)
+    }
+
+    private fun seenMessage(userid: String) {
+        reference = FirebaseDatabase.getInstance().getReference("Chats")
+        seenListener = reference.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                for (snapshot: DataSnapshot in p0.children) {
+                    val chat = snapshot.getValue(Chat::class.java)
+                    if (chat!!.receiver == fuser.uid && chat.sender == userid) {
+                        val hashMap: HashMap<String, Any> = HashMap()
+                        hashMap["isseen"] = true
+                        snapshot.ref.updateChildren(hashMap)
+                    }
+                }
             }
         })
     }
@@ -87,6 +111,7 @@ class ChatsActivity : AppCompatActivity() {
         hashMap["sender"] = sender
         hashMap["receiver"] = receiver
         hashMap["message"] = message
+        hashMap["isseen"] = false
 
         reference.child("Chats").push().setValue(hashMap)
     }
@@ -111,5 +136,25 @@ class ChatsActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    private fun status(status: String) {
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.uid)
+
+        val hashMap: HashMap<String, Any> = HashMap()
+        hashMap["status"] = status
+
+        reference.updateChildren(hashMap)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        status("online")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        reference.removeEventListener(seenListener)
+        status("offline")
     }
 }

@@ -1,14 +1,19 @@
 package com.example.chatapp
 
 import android.os.Bundle
-import android.view.Window
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.bumptech.glide.Glide
 import com.example.chatapp.fragments.FriendsFragment
 import com.example.chatapp.fragments.MessagesFragment
 import com.example.chatapp.fragments.ProfileFragment
+import com.example.chatapp.model.User
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
 
@@ -17,6 +22,9 @@ class HomeActivity : AppCompatActivity() {
     private val fragment3: Fragment = ProfileFragment.newInstance()
     private val fm: FragmentManager = supportFragmentManager
     private var active: Fragment = fragment1
+
+    private lateinit var firebaseUser: FirebaseUser
+    private lateinit var reference: DatabaseReference
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -41,9 +49,11 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
-        supportActionBar!!.hide()
         setContentView(R.layout.activity_home)
+
+        setSupportActionBar(home_toolbar)
+        supportActionBar!!.title = ""
+
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
@@ -51,5 +61,44 @@ class HomeActivity : AppCompatActivity() {
         fm.beginTransaction().add(R.id.fragmentContainer, fragment3, "3").hide(fragment3).commit()
         fm.beginTransaction().add(R.id.fragmentContainer, fragment2, "2").hide(fragment2).commit()
         fm.beginTransaction().add(R.id.fragmentContainer, fragment1, "1").commit()
+
+        firebaseUser = FirebaseAuth.getInstance().currentUser!!
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.uid)
+
+        reference.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                val user: User = p0.getValue(User::class.java)!!
+                home_username.text = user.userName
+                if (user.imageURL == "default") {
+                    home_profileImage.setImageResource(R.mipmap.ic_launcher)
+                } else {
+                    Glide.with(applicationContext)
+                        .load(user.imageURL)
+                        .into(home_profileImage)
+                }
+            }
+        })
+    }
+
+    private fun status(status: String) {
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.uid)
+
+        val hashMap: HashMap<String, Any> = HashMap()
+        hashMap["status"] = status
+
+        reference.updateChildren(hashMap)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        status("online")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        status("offline")
     }
 }

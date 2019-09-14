@@ -32,7 +32,8 @@
                 android:text="@string/username"
                 android:textColor="#fff"
                 android:textStyle="bold"
-                android:layout_marginStart="25dp"/>
+                android:textSize="18sp"
+                android:layout_marginStart="30dp"/>
 
         </androidx.appcompat.widget.Toolbar>
 

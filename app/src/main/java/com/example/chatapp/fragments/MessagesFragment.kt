@@ -90,7 +90,7 @@ class MessagesFragment : Fragment() {
                     for (id: String in usersList) {
                         if (user.id == id) {
                             if (mUsers.size != 0) {
-                                for (user1: User in mUsers) {
+                                for (user1: User in ArrayList<User>(mUsers)) {
                                     if (user.id != user1.id) {
                                         mUsers.add(user)
                                     }
@@ -102,7 +102,7 @@ class MessagesFragment : Fragment() {
                     }
                 }
 
-                friendsAdapter = FriendsAdapter(context!!, mUsers)
+                friendsAdapter = FriendsAdapter(context!!, mUsers, true)
                 recyclerView.adapter = friendsAdapter
             }
         })

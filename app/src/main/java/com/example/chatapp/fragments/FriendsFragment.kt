@@ -2,6 +2,8 @@ package com.example.chatapp.fragments
 
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +15,7 @@ import com.example.chatapp.adapter.FriendsAdapter
 import com.example.chatapp.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.fragment_friends.*
 import kotlinx.android.synthetic.main.fragment_friends.view.*
 
 class FriendsFragment : Fragment() {
@@ -42,6 +45,45 @@ class FriendsFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         readUsers()
+
+        search_friends.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                searchFriends(s.toString().toLowerCase())
+            }
+        })
+    }
+
+    private fun searchFriends(s: String) {
+        val fuser = FirebaseAuth.getInstance().currentUser
+        val query = FirebaseDatabase.getInstance().getReference("Users").orderByChild("search")
+            .startAt(s)
+            .endAt(s+"\uf8ff")
+
+        query.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                mUsers.clear()
+                for (snapshot: DataSnapshot in p0.children) {
+                    val user = snapshot.getValue(User::class.java)
+
+                    if (user!!.id != fuser!!.uid) {
+                        mUsers.add(user)
+                    }
+                }
+
+                friendsAdapter = FriendsAdapter(requireContext(), mUsers, false)
+                recyclerView.adapter = friendsAdapter
+            }
+        })
     }
 
     private fun readUsers() {
@@ -53,17 +95,19 @@ class FriendsFragment : Fragment() {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                mUsers.clear()
-                for (snapshot: DataSnapshot in p0.children) {
-                    val user = snapshot.getValue(User::class.java)
+                if (search_friends.text.toString() == "") {
+                    mUsers.clear()
+                    for (snapshot: DataSnapshot in p0.children) {
+                        val user = snapshot.getValue(User::class.java)
 
-                    if (user!!.id != firebaseUser!!.uid) {
-                        mUsers.add(user)
+                        if (user!!.id != firebaseUser!!.uid) {
+                            mUsers.add(user)
+                        }
                     }
-                }
 
-                friendsAdapter = FriendsAdapter(requireContext(), mUsers)
-                recyclerView.adapter = friendsAdapter
+                    friendsAdapter = FriendsAdapter(requireContext(), mUsers, false)
+                    recyclerView.adapter = friendsAdapter
+                }
             }
         })
     }

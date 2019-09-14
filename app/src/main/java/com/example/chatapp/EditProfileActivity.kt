@@ -1,7 +1,6 @@
 package com.example.chatapp
 
 import android.app.Activity
-import android.app.Activity.RESULT_OK
 import android.app.ProgressDialog
 import android.content.ContentResolver
 import android.content.Intent
@@ -22,7 +21,6 @@ import com.google.firebase.database.*
 import com.google.firebase.storage.*
 import kotlinx.android.synthetic.main.activity_edit_profile.*
 import java.lang.Exception
-import java.util.*
 import kotlin.collections.HashMap
 
 class EditProfileActivity : AppCompatActivity() {
@@ -31,8 +29,7 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var firebaseUser: FirebaseUser
     private lateinit var storageReference: StorageReference
     private val IMAGE_REQUEST = 1
-    var imageUrl: Uri? = null
-//    private lateinit var uploadTask: UploadTask
+    private var imageUrl: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,8 +84,8 @@ class EditProfileActivity : AppCompatActivity() {
     private fun uploadImage() {
         val pd = ProgressDialog(this@EditProfileActivity)
         pd.setMessage("Uploading")
-//        pd.setCancelable(false)
-//        pd.setCanceledOnTouchOutside(false)
+        pd.setCancelable(false)
+        pd.setCanceledOnTouchOutside(false)
         pd.show()
 
         if (imageUrl != null) {

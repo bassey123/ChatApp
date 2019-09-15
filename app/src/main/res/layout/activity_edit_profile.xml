@@ -40,7 +40,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="8dp"
-            android:drawableLeft="@drawable/ic_person"
+            android:drawableStart="@drawable/ic_person"
             android:drawablePadding="4dp"
             android:hint="@string/reg_no"
             android:inputType="text"

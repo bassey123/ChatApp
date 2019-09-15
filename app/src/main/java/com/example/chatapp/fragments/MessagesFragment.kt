@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.R
 import com.example.chatapp.adapter.FriendsAdapter
-import com.example.chatapp.model.Chat
+import com.example.chatapp.model.Chatlist
 import com.example.chatapp.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -18,14 +18,14 @@ import com.google.firebase.database.*
 
 class MessagesFragment : Fragment() {
 
-    lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView: RecyclerView
     lateinit var friendsAdapter: FriendsAdapter
     val mUsers = ArrayList<User>()
 
-    lateinit var fuser: FirebaseUser
+    private lateinit var fuser: FirebaseUser
     private lateinit var reference: DatabaseReference
 
-    val usersList = ArrayList<String>()
+    val usersList = ArrayList<Chatlist>()
 
     companion object {
         fun newInstance() : MessagesFragment =
@@ -49,60 +49,41 @@ class MessagesFragment : Fragment() {
 
         fuser = FirebaseAuth.getInstance().currentUser!!
 
-        reference = FirebaseDatabase.getInstance().getReference("Chats")
+        reference = FirebaseDatabase.getInstance().getReference("Chatlist").child(fuser.uid)
         reference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
                 usersList.clear()
-
                 for (snapshot: DataSnapshot in p0.children) {
-                    val chat: Chat = snapshot.getValue(Chat::class.java)!!
-
-                    if (chat.sender == fuser.uid) {
-                        usersList.add(chat.receiver)
-                    }
-                    if (chat.receiver == fuser.uid) {
-                        usersList.add(chat.sender)
-                    }
+                    val chatlist = snapshot.getValue(Chatlist::class.java)
+                    usersList.add(chatlist!!)
                 }
 
-                readChats()
+                chatList()
             }
         })
+
     }
 
-    private fun readChats() {
+    private fun chatList() {
         reference = FirebaseDatabase.getInstance().getReference("Users")
-
         reference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
                 mUsers.clear()
-
                 for (snapshot: DataSnapshot in p0.children) {
-                    val user: User = snapshot.getValue(User::class.java)!!
-
-                    // display 1 user from chats
-                    for (id: String in usersList) {
-                        if (user.id == id) {
-                            if (mUsers.size != 0) {
-                                for (user1: User in ArrayList<User>(mUsers)) {
-                                    if (user.id != user1.id) {
-                                        mUsers.add(user)
-                                    }
-                                }
-                            } else {
-                                mUsers.add(user)
-                            }
+                    val user = snapshot.getValue(User::class.java)
+                    for (chatlist: Chatlist in usersList) {
+                        if (user!!.id == chatlist.id) {
+                            mUsers.add(user)
                         }
                     }
                 }
-
-                friendsAdapter = FriendsAdapter(context!!, mUsers, true)
+                friendsAdapter = FriendsAdapter(requireContext(), mUsers, true)
                 recyclerView.adapter = friendsAdapter
             }
         })

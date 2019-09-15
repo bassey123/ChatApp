@@ -29,6 +29,8 @@ class ChatsActivity : AppCompatActivity() {
 
     private lateinit var seenListener: ValueEventListener
 
+    lateinit var userid: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chats)
@@ -48,7 +50,7 @@ class ChatsActivity : AppCompatActivity() {
         recyclerView.layoutManager = linearLayoutManager
 
         val intent = intent
-        val userid = intent.getStringExtra("userid")
+        userid = intent.getStringExtra("userid")
         fuser = FirebaseAuth.getInstance().currentUser!!
 
         send_btn.setOnClickListener {
@@ -71,7 +73,7 @@ class ChatsActivity : AppCompatActivity() {
                 val user: User = p0.getValue(User::class.java)!!
                 chat_username.text = user.userName
                 if (user.imageURL == "default") {
-                    chat_profile_image.setImageResource(R.mipmap.ic_launcher)
+                    chat_profile_image.setImageResource(R.drawable.ic_person)
                 } else {
                     Glide.with(applicationContext)
                         .load(user.imageURL)
@@ -114,6 +116,22 @@ class ChatsActivity : AppCompatActivity() {
         hashMap["isseen"] = false
 
         reference.child("Chats").push().setValue(hashMap)
+
+        // add user to chat fragment
+        val chatRef: DatabaseReference = FirebaseDatabase.getInstance().getReference("Chatlist")
+            .child(fuser.uid)
+            .child(userid)
+
+        chatRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                if (!p0.exists()) {
+                    chatRef.child("id").setValue(userid)
+                }
+            }
+        })
     }
 
     private fun readMessages(myid: String, userid: String, imageurl: String) {

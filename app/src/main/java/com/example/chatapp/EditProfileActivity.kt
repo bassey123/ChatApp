@@ -53,7 +53,7 @@ class EditProfileActivity : AppCompatActivity() {
                 edit_reg.setText(user.regNo)
                 edit_email.setText(user.email)
                 if (user.imageURL == "default") {
-                    edit_profileImage.setImageResource(R.mipmap.ic_launcher)
+                    edit_profileImage.setImageResource(R.drawable.ic_person)
                 } else {
                     Glide.with(applicationContext)
                         .load(user.imageURL)

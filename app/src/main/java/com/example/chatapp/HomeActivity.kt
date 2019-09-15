@@ -73,7 +73,7 @@ class HomeActivity : AppCompatActivity() {
                 val user: User = p0.getValue(User::class.java)!!
                 home_username.text = user.userName
                 if (user.imageURL == "default") {
-                    home_profileImage.setImageResource(R.mipmap.ic_launcher)
+                    home_profileImage.setImageResource(R.drawable.ic_person)
                 } else {
                     Glide.with(applicationContext)
                         .load(user.imageURL)

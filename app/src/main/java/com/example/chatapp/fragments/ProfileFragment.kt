@@ -51,7 +51,7 @@ class ProfileFragment : Fragment() {
                 regNo_profile.text = user.regNo
                 email_profile.text = user.email
                 if (user.imageURL == "default") {
-                    profile_image.setImageResource(R.mipmap.ic_launcher)
+                    profile_image.setImageResource(R.drawable.ic_person)
                 } else {
                     Glide.with(activity!!)
                         .load(user.imageURL)

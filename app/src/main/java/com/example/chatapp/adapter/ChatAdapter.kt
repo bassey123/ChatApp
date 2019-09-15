@@ -45,7 +45,7 @@ class ChatAdapter(private val mContext: Context, private val mChat: List<Chat>, 
         holder.showMessage.text = chat.message
 
         if (imageurl == "default") {
-            holder.image.setImageResource(R.mipmap.ic_launcher)
+            holder.image.setImageResource(R.drawable.ic_person)
         } else {
             Glide.with(mContext)
                 .load(imageurl)

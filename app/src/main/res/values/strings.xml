@@ -32,4 +32,7 @@
     <string name="type_a_message">Type a message…</string>
     <string name="hello">hello</string>
     <string name="search">Search...</string>
+    <string name="reset">Reset</string>
+    <string name="reset_message">By clicking Reset,
+        you will receive an email to reset your password</string>
 </resources>

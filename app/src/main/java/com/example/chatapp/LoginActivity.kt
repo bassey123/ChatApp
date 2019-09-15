@@ -23,6 +23,10 @@ class LoginActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
+        forgot_password.setOnClickListener {
+            startActivity(Intent(this@LoginActivity, ResetPasswordActivity::class.java))
+        }
+
         login_btn.setOnClickListener {
 
             val email = login_email.text.toString()

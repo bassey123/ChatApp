@@ -37,6 +37,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/profile_image"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="30dp"/>
+
         <TextView
                 android:text="@string/name"
                 android:layout_width="wrap_content"
@@ -48,8 +49,8 @@
                 app:layout_constraintStart_toEndOf="@+id/imageView5"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="30dp"/>
+
         <TextView
-                android:text="TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/name_profile"
@@ -69,6 +70,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/imageView5"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="30dp"/>
+
         <TextView
                 android:text="@string/reg_no"
                 android:layout_width="wrap_content"
@@ -80,8 +82,8 @@
                 app:layout_constraintTop_toBottomOf="@+id/name_profile"
                 android:layout_marginStart="30dp"
                 app:layout_constraintStart_toEndOf="@+id/imageView6"/>
+
         <TextView
-                android:text="TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#000"
@@ -101,6 +103,7 @@
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="64dp"
                 app:layout_constraintTop_toBottomOf="@+id/imageView6"/>
+
         <TextView
                 android:text="@string/email"
                 android:layout_width="wrap_content"
@@ -112,8 +115,8 @@
                 app:layout_constraintTop_toBottomOf="@+id/regNo_profile"
                 android:layout_marginStart="30dp"
                 app:layout_constraintStart_toEndOf="@+id/imageView7"/>
+
         <TextView
-                android:text="TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/email_profile"
@@ -123,6 +126,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView9"
                 app:layout_constraintStart_toEndOf="@+id/imageView7"
                 android:layout_marginStart="30dp"/>
+
         <Button
                 android:text="@string/edit_profile"
                 android:layout_width="wrap_content"

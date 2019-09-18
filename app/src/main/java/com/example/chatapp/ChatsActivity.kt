@@ -9,12 +9,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.chatapp.adapter.ChatAdapter
+import com.example.chatapp.fragments.APIService
 import com.example.chatapp.model.Chat
 import com.example.chatapp.model.User
+import com.example.chatapp.notifications.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_chats.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import kotlin.collections.HashMap
 
 class ChatsActivity : AppCompatActivity() {
@@ -31,6 +36,10 @@ class ChatsActivity : AppCompatActivity() {
 
     lateinit var userid: String
 
+    private lateinit var apiService: APIService
+
+    var notify: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chats)
@@ -43,6 +52,8 @@ class ChatsActivity : AppCompatActivity() {
             startActivity(Intent(this@ChatsActivity, HomeActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
         }
 
+        apiService = Client().getClient("https://fcm.googlezpis.com/").create(APIService::class.java)
+
         recyclerView = findViewById(R.id.chats_recyclerView)
         recyclerView.setHasFixedSize(true)
         val linearLayoutManager = LinearLayoutManager(applicationContext)
@@ -54,6 +65,7 @@ class ChatsActivity : AppCompatActivity() {
         fuser = FirebaseAuth.getInstance().currentUser!!
 
         send_btn.setOnClickListener {
+            notify = true
             val msg = send_text.text.toString()
             if (msg != "") {
                 sendMessage(fuser.uid, userid, msg)
@@ -108,7 +120,7 @@ class ChatsActivity : AppCompatActivity() {
 
     private fun sendMessage(sender: String, receiver: String, message: String) {
 
-        val reference = FirebaseDatabase.getInstance().reference
+        var reference = FirebaseDatabase.getInstance().reference
         val hashMap: HashMap<String, Any> = HashMap()
         hashMap["sender"] = sender
         hashMap["receiver"] = receiver
@@ -129,6 +141,58 @@ class ChatsActivity : AppCompatActivity() {
             override fun onDataChange(p0: DataSnapshot) {
                 if (!p0.exists()) {
                     chatRef.child("id").setValue(userid)
+                }
+            }
+        })
+
+        val msg = message
+
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.uid)
+        reference.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                val user = p0.getValue(User::class.java)
+                if (notify) {
+                    sendNotification(receiver, user!!.userName, msg)
+                }
+                notify = false
+            }
+        })
+    }
+
+    private fun sendNotification(receiver: String, username: String, message: String) {
+        val tokens: DatabaseReference = FirebaseDatabase.getInstance().getReference("Tokens")
+        val query: Query = tokens.orderByKey().equalTo(tokens.toString())
+        query.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                for (snapshot: DataSnapshot in p0.children) {
+                    val token = snapshot.getValue(Token::class.java)
+                    val data = Data(fuser.uid, R.mipmap.ic_launcher, "$username: $message", "New Message",
+                        userid)
+
+                    val sender = Sender(data, token!!.token)
+
+                    apiService.sendNotification(sender)
+                        .enqueue(object : Callback<MyResponse> {
+                            override fun onFailure(call: Call<MyResponse>, t: Throwable) {
+                            }
+
+                            override fun onResponse(
+                                call: Call<MyResponse>,
+                                response: Response<MyResponse>
+                            ) {
+                                if (response.body()!!.equals(200)) {
+                                    if (response.body()!!.success != 1) {
+                                        Toast.makeText(this@ChatsActivity, "Failed!", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
+                        })
                 }
             }
         })

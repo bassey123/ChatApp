@@ -12,9 +12,11 @@ import com.example.chatapp.R
 import com.example.chatapp.adapter.FriendsAdapter
 import com.example.chatapp.model.Chatlist
 import com.example.chatapp.model.User
+import com.example.chatapp.notifications.Token
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.google.firebase.iid.FirebaseInstanceId
 
 class MessagesFragment : Fragment() {
 
@@ -65,6 +67,14 @@ class MessagesFragment : Fragment() {
             }
         })
 
+        updateToken(FirebaseInstanceId.getInstance().token.toString())
+
+    }
+
+    private fun updateToken(token: String) {
+        val reference: DatabaseReference = FirebaseDatabase.getInstance().getReference("Tokens")
+        val token1 = Token(token)
+        reference.child(fuser.uid).setValue(token1)
     }
 
     private fun chatList() {

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.view.View
 import android.view.Window
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
@@ -32,12 +33,16 @@ class LoginActivity : AppCompatActivity() {
             val email = login_email.text.toString()
             val pwd = login_pwd.text.toString()
 
+            login_pb.visibility = View.VISIBLE
+
             if(TextUtils.isEmpty(email) || TextUtils.isEmpty(pwd)) {
                 Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show()
+                login_pb.visibility = View.GONE
             } else {
                 auth.signInWithEmailAndPassword(email, pwd)
                     .addOnCompleteListener {
                         if(it.isSuccessful) {
+                            login_pb.visibility = View.GONE
                             val intent = Intent(this, HomeActivity::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

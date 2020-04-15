@@ -15,18 +15,18 @@
             android:theme="@style/AppTheme">
         <activity android:name=".ResetPasswordActivity"
                 android:label="Reset Password"
-                android:parentActivityName=".LoginActivity"></activity>
+                android:parentActivityName=".LoginActivity"/>
         <activity
                 android:name=".EditProfileActivity"
-                android:label="Edit Profile"></activity>
+                android:label="Edit Profile"/>
         <activity
                 android:name=".ChatsActivity"
-                android:theme="@style/AppTheme2"></activity>
+                android:theme="@style/AppTheme2"/>
         <activity
                 android:name=".HomeActivity"
                 android:launchMode="singleTop"
-                android:screenOrientation="portrait"
-                android:theme="@style/AppTheme2"></activity>
+                android:screenOrientation="fullSensor"
+                android:theme="@style/AppTheme2"/>
         <activity
                 android:name=".LoginActivity"
                 android:parentActivityName=".MainActivity" />

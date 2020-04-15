@@ -117,12 +117,10 @@ class EditProfileActivity : AppCompatActivity() {
                         pd.dismiss()
                     }
                 }
-            }).addOnFailureListener(object : OnFailureListener {
-                override fun onFailure(p0: Exception) {
-                    Toast.makeText(applicationContext, p0.message, Toast.LENGTH_SHORT).show()
-                    pd.dismiss()
-                }
-            })
+            }).addOnFailureListener { p0 ->
+                Toast.makeText(applicationContext, p0.message, Toast.LENGTH_SHORT).show()
+                pd.dismiss()
+            }
         } else {
             Toast.makeText(applicationContext, "No Image Selected", Toast.LENGTH_SHORT).show()
         }

@@ -11,22 +11,22 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.R
-import com.example.chatapp.adapter.FriendsAdapter
+import com.example.chatapp.adapter.UsersAdapter
 import com.example.chatapp.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.fragment_friends.*
-import kotlinx.android.synthetic.main.fragment_friends.view.*
+import kotlinx.android.synthetic.main.fragment_users.*
+import kotlinx.android.synthetic.main.fragment_users.view.*
 
-class FriendsFragment : Fragment() {
+class UsersFragment : Fragment() {
 
     lateinit var recyclerView: RecyclerView
-    lateinit var friendsAdapter: FriendsAdapter
+    lateinit var usersAdapter: UsersAdapter
     val mUsers = ArrayList<User>()
 
     companion object {
-        fun newInstance() : FriendsFragment =
-            FriendsFragment()
+        fun newInstance() : UsersFragment =
+            UsersFragment()
     }
 
     override fun onCreateView(
@@ -34,7 +34,7 @@ class FriendsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_friends, container, false)
+        return inflater.inflate(R.layout.fragment_users, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -80,8 +80,8 @@ class FriendsFragment : Fragment() {
                     }
                 }
 
-                friendsAdapter = FriendsAdapter(requireContext(), mUsers, false)
-                recyclerView.adapter = friendsAdapter
+                usersAdapter = UsersAdapter(requireContext(), mUsers, false)
+                recyclerView.adapter = usersAdapter
             }
         })
     }
@@ -105,8 +105,8 @@ class FriendsFragment : Fragment() {
                         }
                     }
 
-                    friendsAdapter = FriendsAdapter(requireContext(), mUsers, false)
-                    recyclerView.adapter = friendsAdapter
+                    usersAdapter = UsersAdapter(requireContext(), mUsers, false)
+                    recyclerView.adapter = usersAdapter
                 }
             }
         })

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.view.View
 import android.view.Window
 import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
@@ -33,11 +34,14 @@ class SignupActivity : AppCompatActivity() {
             val regNo = signup_reg.text.toString()
             val email = signup_email.text.toString()
             val pwd = signup_pwd.text.toString()
+            signup_pb.visibility = View.VISIBLE
 
             if(TextUtils.isEmpty(userName) || TextUtils.isEmpty(regNo) || TextUtils.isEmpty(email) || TextUtils.isEmpty(pwd)) {
                 Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show()
+                signup_pb.visibility = View.GONE
             } else if(pwd.length < 6) {
                 Toast.makeText(this, "Password must be atleast 6 characters", Toast.LENGTH_SHORT).show()
+                signup_pb.visibility = View.GONE
             } else {
             registerUser(userName, regNo, email, pwd)
             }
@@ -112,6 +116,7 @@ class SignupActivity : AppCompatActivity() {
 
                     reference.setValue(hashMap).addOnCompleteListener {
                         if (it.isSuccessful) {
+                            signup_pb.visibility = View.GONE
                             val intent = Intent(this, HomeActivity::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

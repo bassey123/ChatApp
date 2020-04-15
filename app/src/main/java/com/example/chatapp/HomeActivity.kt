@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.bumptech.glide.Glide
-import com.example.chatapp.fragments.FriendsFragment
+import com.example.chatapp.fragments.UsersFragment
 import com.example.chatapp.fragments.MessagesFragment
 import com.example.chatapp.fragments.ProfileFragment
 import com.example.chatapp.model.User
@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_home.*
 class HomeActivity : AppCompatActivity() {
 
     private val fragment1: Fragment = MessagesFragment.newInstance()
-    private val fragment2: Fragment = FriendsFragment.newInstance()
+    private val fragment2: Fragment = UsersFragment.newInstance()
     private val fragment3: Fragment = ProfileFragment.newInstance()
     private val fm: FragmentManager = supportFragmentManager
     private var active: Fragment = fragment1
@@ -54,9 +54,34 @@ class HomeActivity : AppCompatActivity() {
         setSupportActionBar(home_toolbar)
         supportActionBar!!.title = ""
 
+
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+
+        /*reference = FirebaseDatabase.getInstance().getReference("Chats")
+        reference.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+                var unread = 0
+                for (snapshot: DataSnapshot in p0.children) {
+                    val chat = snapshot.getValue(Chat::class.java)
+                    if (chat!!.receiver == firebaseUser.uid && chat.isseen) {
+                        unread++
+                    }
+                }
+
+                if (unread == 0) {
+                    navView.menu.findItem(R.id.navigation_messages).title = "Messages"
+                } else {
+                    navView.menu.findItem(R.id.navigation_messages).title = "Messages($unread)"
+                }
+            }
+        })*/
+
 
         fm.beginTransaction().add(R.id.fragmentContainer, fragment3, "3").hide(fragment3).commit()
         fm.beginTransaction().add(R.id.fragmentContainer, fragment2, "2").hide(fragment2).commit()

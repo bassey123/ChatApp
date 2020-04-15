@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.R
-import com.example.chatapp.adapter.FriendsAdapter
+import com.example.chatapp.adapter.UsersAdapter
 import com.example.chatapp.model.Chatlist
 import com.example.chatapp.model.User
 import com.example.chatapp.notifications.Token
@@ -21,7 +21,7 @@ import com.google.firebase.iid.FirebaseInstanceId
 class MessagesFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    lateinit var friendsAdapter: FriendsAdapter
+    lateinit var usersAdapter: UsersAdapter
     val mUsers = ArrayList<User>()
 
     private lateinit var fuser: FirebaseUser
@@ -30,7 +30,7 @@ class MessagesFragment : Fragment() {
     val usersList = ArrayList<Chatlist>()
 
     companion object {
-        fun newInstance() : MessagesFragment =
+        fun newInstance(): MessagesFragment =
             MessagesFragment()
     }
 
@@ -67,15 +67,15 @@ class MessagesFragment : Fragment() {
             }
         })
 
-        updateToken(FirebaseInstanceId.getInstance().token.toString())
+//        updateToken(FirebaseInstanceId.getInstance().token.toString())
 
     }
 
-    private fun updateToken(token: String) {
+    /*private fun updateToken(token: String) {
         val reference: DatabaseReference = FirebaseDatabase.getInstance().getReference("Tokens")
         val token1 = Token(token)
         reference.child(fuser.uid).setValue(token1)
-    }
+    }*/
 
     private fun chatList() {
         reference = FirebaseDatabase.getInstance().getReference("Users")
@@ -93,8 +93,8 @@ class MessagesFragment : Fragment() {
                         }
                     }
                 }
-                friendsAdapter = FriendsAdapter(requireContext(), mUsers, true)
-                recyclerView.adapter = friendsAdapter
+                usersAdapter = UsersAdapter(requireContext(), mUsers, true)
+                recyclerView.adapter = usersAdapter
             }
         })
     }

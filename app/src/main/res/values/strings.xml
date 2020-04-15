@@ -15,7 +15,7 @@
     <string name="forgot_password">Forgot Password?</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="profile">Profile</string>
-    <string name="friends">Friends</string>
+    <string name="users">Users</string>
     <string name="messages">Messages</string>
     <string name="title_activity_messages">MessagesActivity</string>
     <string name="title_home">Home</string>
@@ -35,4 +35,5 @@
     <string name="reset">Reset</string>
     <string name="reset_message">By clicking Reset,
         you will receive an email to reset your password</string>
+    <string name="no_message">No Message</string>
 </resources>

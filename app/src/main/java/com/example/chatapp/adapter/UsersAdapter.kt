@@ -16,16 +16,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.android.synthetic.main.friends_list_item.view.*
+import kotlinx.android.synthetic.main.users_list_item.view.*
 
-class FriendsAdapter(private val mContext: Context, private val mUsers: List<User>, private val isChat: Boolean) :
-    RecyclerView.Adapter<FriendsAdapter.ViewHolder>() {
+class UsersAdapter(private val mContext: Context, private val mUsers: List<User>, private val isChat: Boolean) :
+    RecyclerView.Adapter<UsersAdapter.ViewHolder>() {
 
     lateinit var theLastMessage: String
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v =
-            LayoutInflater.from(parent.context).inflate(R.layout.friends_list_item, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.users_list_item, parent, false)
         return ViewHolder(v)
     }
 
@@ -98,7 +98,7 @@ class FriendsAdapter(private val mContext: Context, private val mUsers: List<Use
                 }
 
                 when(theLastMessage) {
-                    "default" -> last_msg.text = "No Message"
+                    "default" -> last_msg.text = mContext.getString(R.string.no_message)
                     else -> last_msg.text = theLastMessage
                 }
 

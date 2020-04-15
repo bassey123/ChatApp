@@ -17,8 +17,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_chats.*
-import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.Call
 import retrofit2.Response
 import kotlin.collections.HashMap
 
@@ -36,9 +36,9 @@ class ChatsActivity : AppCompatActivity() {
 
     lateinit var userid: String
 
-    private lateinit var apiService: APIService
+//    private lateinit var apiService: APIService
 
-    var notify: Boolean = false
+//    var notify: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +52,7 @@ class ChatsActivity : AppCompatActivity() {
             startActivity(Intent(this@ChatsActivity, HomeActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
         }
 
-        apiService = Client().getClient("https://fcm.googlezpis.com/").create(APIService::class.java)
+//        apiService = Client().getClient("https://fcm.googleapis.com/").create(APIService::class.java)
 
         recyclerView = findViewById(R.id.chats_recyclerView)
         recyclerView.setHasFixedSize(true)
@@ -65,7 +65,7 @@ class ChatsActivity : AppCompatActivity() {
         fuser = FirebaseAuth.getInstance().currentUser!!
 
         send_btn.setOnClickListener {
-            notify = true
+//            notify = true
             val msg = send_text.text.toString()
             if (msg != "") {
                 sendMessage(fuser.uid, userid, msg)
@@ -145,7 +145,7 @@ class ChatsActivity : AppCompatActivity() {
             }
         })
 
-        val msg = message
+        /*val msg = message
 
         reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.uid)
         reference.addValueEventListener(object : ValueEventListener {
@@ -159,12 +159,12 @@ class ChatsActivity : AppCompatActivity() {
                 }
                 notify = false
             }
-        })
+        })*/
     }
 
-    private fun sendNotification(receiver: String, username: String, message: String) {
+    /*private fun sendNotification(receiver: String, username: String, message: String) {
         val tokens: DatabaseReference = FirebaseDatabase.getInstance().getReference("Tokens")
-        val query: Query = tokens.orderByKey().equalTo(tokens.toString())
+        val query: Query = tokens.orderByKey().equalTo(receiver)
         query.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
@@ -186,7 +186,7 @@ class ChatsActivity : AppCompatActivity() {
                                 call: Call<MyResponse>,
                                 response: Response<MyResponse>
                             ) {
-                                if (response.body()!!.equals(200)) {
+                                if (response.code() == 200) {
                                     if (response.body()!!.success != 1) {
                                         Toast.makeText(this@ChatsActivity, "Failed!", Toast.LENGTH_SHORT).show()
                                     }
@@ -196,7 +196,7 @@ class ChatsActivity : AppCompatActivity() {
                 }
             }
         })
-    }
+    }*/
 
     private fun readMessages(myid: String, userid: String, imageurl: String) {
 
